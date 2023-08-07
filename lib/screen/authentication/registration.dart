@@ -115,7 +115,7 @@ class _RegistrationState extends State<Registration> {
                           width: size.width * 0.02,
                         ),
                         Text(
-                          "REGISTER",
+                          "Company Registration",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 17),
                         ),
@@ -135,7 +135,8 @@ class _RegistrationState extends State<Registration> {
                       scrollPadding: EdgeInsets.only(
                           bottom: topInsets + size.height * 0.18),
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(left: 10.0, top: 15.0, bottom: 15.0),
+                          contentPadding: EdgeInsets.only(
+                              left: 10.0, top: 15.0, bottom: 15.0),
                           // fillColor: Color.fromARGB(255, 235, 232, 232),
                           // filled: true,
                           focusedBorder: OutlineInputBorder(
@@ -148,8 +149,7 @@ class _RegistrationState extends State<Registration> {
                           errorBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20.0)),
-                            borderSide:
-                                const BorderSide(color: Colors.red, width: 1),
+                            borderSide: BorderSide(color: Colors.red, width: 1),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius:
@@ -166,6 +166,7 @@ class _RegistrationState extends State<Registration> {
                       height: 10,
                     ),
                     TextFormField(
+                      keyboardType: TextInputType.phone,
                       controller: phone,
                       validator: (text) {
                         if (text == null || text.isEmpty) {
@@ -179,7 +180,8 @@ class _RegistrationState extends State<Registration> {
                           bottom: topInsets + size.height * 0.18),
                       // obscureText: _isObscure.value,
                       decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.only(left: 10.0, top: 15.0, bottom: 15.0),
+                          contentPadding: EdgeInsets.only(
+                              left: 10.0, top: 15.0, bottom: 15.0),
 
                           // filled: true,
                           // fillColor: Color.fromARGB(255, 235, 232, 232),
@@ -193,9 +195,14 @@ class _RegistrationState extends State<Registration> {
                           errorBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20.0)),
-                            borderSide:
-                                BorderSide(color: Colors.red, width: 1),
+                            borderSide: BorderSide(color: Colors.red, width: 1),
                           ),
+                          // errorBorder: OutlineInputBorder(
+                          //   borderRadius:
+                          //       BorderRadius.all(Radius.circular(20.0)),
+                          //   borderSide:
+                          //       BorderSide(color: Colors.red, width: 1),
+                          // ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20.0)),
@@ -203,9 +210,9 @@ class _RegistrationState extends State<Registration> {
                                 color: Color.fromARGB(255, 119, 119, 119),
                                 width: 1),
                           ),
-                          prefixIcon:  Icon(Icons.phone, size: 16),
+                          prefixIcon: Icon(Icons.phone, size: 16),
                           hintText: 'Phone Number',
-                          hintStyle:TextStyle(fontSize: 14)),
+                          hintStyle: TextStyle(fontSize: 14)),
                     ),
                     SizedBox(
                       height: size.height * 0.03,
@@ -219,10 +226,10 @@ class _RegistrationState extends State<Registration> {
                             // decoration: BoxDecoration(
                             //   borderRadius: BorderRadius.circular(50),
                             // ),
-                            child: ElevatedButton(    
+                            child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                     primary: Colors.black,
-                                    shape:const StadiumBorder()),
+                                    shape: const StadiumBorder()),
                                 onPressed: () async {
                                   String deviceInfo =
                                       "$manufacturer" + '' + "$model";
@@ -241,7 +248,7 @@ class _RegistrationState extends State<Registration> {
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                       top: 12.0, bottom: 12),
-                                  child: value.isLoginLoading
+                                  child: value.isLoading
                                       ? const SpinKitThreeBounce(
                                           color: Colors.white,
                                           size: 16,

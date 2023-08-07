@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:sheenbakery/controller/registration_controller.dart';
 import 'package:sheenbakery/screen/widgets/detail_sheet.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,11 +18,59 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  DateTime selectedDate = DateTime.now();
+  String? formattedDate;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<Controller>(context, listen: false).someFunction();
+    formattedDate = DateFormat('dd-MM-yyyy').format(selectedDate);
+    Provider.of<Controller>(context, listen: false).geInitialization(
+      context,
+      formattedDate!,
+    );
+    Provider.of<RegistrationController>(context, listen: false).getUserData();
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+                primary:
+                    Color.fromARGB(255, 238, 183, 3), // header background color
+                onPrimary: Colors.white, // header text color
+                onSurface: Colors.black, // body text color
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                    foregroundColor: Colors.red,
+                    textStyle: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold) // button text color
+                    ),
+              ),
+            ),
+            child: child!,
+          );
+        },
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        formattedDate = DateFormat('dd-MM-yyyy').format(selectedDate);
+        Provider.of<Controller>(context, listen: false).geInitialization(
+          context,
+          formattedDate!,
+        );
+        // Provider.of<Controller>(context, listen: false)
+        //     .loadDashboard(context, formattedDate!, "init");
+      });
+    }
   }
 
   @override
@@ -28,26 +79,59 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 46, 45, 45),
       appBar: AppBar(
-        title: Text(
-          "Company NAme",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        toolbarHeight: 90, // default is 56
+        toolbarOpacity: 0.5,
+        title: Consumer<RegistrationController>(
+          builder: (context, value, child) => value.isLoading
+              ? SpinKitChasingDots(
+                  color: Colors.white,
+                  size: 14,
+                )
+              : Column(
+                  children: [
+                    Text(
+                      value.cname.toString().toUpperCase(),
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: size.height * 0.01,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        _selectDate(context);
+                      },
+                      child: Text(
+                        "( ${formattedDate.toString()} )",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.yellow,
+                            fontSize: 18),
+                      ),
+                    )
+                  ],
+                ),
         ),
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 46, 45, 45),
         elevation: 0,
       ),
       body: Consumer<Controller>(
-        builder: (context, value, child) => ListView.builder(
-          itemCount: 13,
-          itemBuilder: (context, index) {
-            return tileCard(size, index);
-          },
-        ),
+        builder: (context, value, child) => value.isDashLoading
+            ? SpinKitCircle(
+                color: Colors.yellow,
+              )
+            : ListView.builder(
+                itemCount: value.branch_list.length,
+                itemBuilder: (context, index) {
+                  return tileCard(size, index, value.branch_list[index]);
+                },
+              ),
       ),
     );
   }
 
-  Widget tileCard(Size size, int index) {
+  Widget tileCard(Size size, int index, Map map) {
     return Padding(
       padding: const EdgeInsets.all(3.0),
       child: Card(
@@ -72,12 +156,15 @@ class _HomePageState extends State<HomePage> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListTile(
+              minLeadingWidth: 10,
+              horizontalTitleGap: 8,
               onTap: () {
+                Provider.of<Controller>(context, listen: false)
+                    .getDashboardDetails(context, map["branch_id"].toString(),
+                        formattedDate.toString());
                 DetailsSheet sheet = DetailsSheet();
-                sheet.showBottomSheet(
-                  context,
-                  size,
-                );
+                sheet.showBottomSheet(context, size, map["branch_name"],
+                    map["branch_id"], formattedDate.toString());
               },
               leading: CircleAvatar(
                   radius: 15,
@@ -87,11 +174,11 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.black,
                   )),
               title: Text(
-                "Chovva".toString().toUpperCase(),
+                map["branch_name"].toString().toUpperCase(),
                 // "sjfjsfbjzfn znjfjzf fznfzjfbdf jhsfbjhfbdf fbjhfb",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 15,
+                    fontSize: 14,
                     color: Colors.white),
               ),
               trailing: Wrap(
@@ -101,19 +188,18 @@ class _HomePageState extends State<HomePage> {
                 runSpacing: 8.0,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  Container(
-                    color: Colors.white,
-                    height: 50,
-                    width: 1,
-                  ),
-                  // SizedBox(
-                  //   width: 20,
+                  // Container(
+                  //   color: Colors.white,
+                  //   height: 50,
+                  //   width: 1,
                   // ),
+
                   Container(
                     child: Text(
-                      "12",
+                      map["branch_sale"].toString(),
+                      // "23453678",
                       style: TextStyle(
-                          fontSize: 21,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Colors.yellow),
                     ),

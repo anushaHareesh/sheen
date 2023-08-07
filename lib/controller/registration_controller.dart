@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:sheenbakery/db_helper.dart';
+import 'package:sheenbakery/screen/home_page.dart';
 
 import '../components/common_data.dart';
 import '../components/custom_snackbar.dart';
@@ -13,7 +13,6 @@ import '../components/external_dir.dart';
 import '../components/network_connectivity.dart';
 import '../model/registration_model.dart';
 import '../screen/authentication/login.dart';
-
 
 class RegistrationController extends ChangeNotifier {
   String? userName;
@@ -76,13 +75,14 @@ class RegistrationController extends ChangeNotifier {
       }
       if (value == true) {
         try {
-          Uri url = Uri.parse("$apiurl/get_registration.php");
+          Uri url =
+              Uri.parse("https://trafiqerp.in/order/fj/get_registration.php");
           Map body = {
             'company_code': companyCode,
             'fcode': fingerprints,
             'deviceinfo': deviceinfo,
             'phoneno': phoneno
-          }; 
+          };
           // ignore: avoid_print
           print("register body----$body");
           isLoading = true;
@@ -102,7 +102,7 @@ class RegistrationController extends ChangeNotifier {
           String? msg = regModel.msg;
 
           if (sof == "1") {
-            if (appType == 'BC' || appType == 'BE') {
+            if (appType == 'RX') {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               /////////////// insert into local db /////////////////////
               String? fp1 = regModel.fp;
@@ -110,12 +110,15 @@ class RegistrationController extends ChangeNotifier {
               // ignore: avoid_print
               print("fingerprint......$fp1");
               prefs.setString("fp", fp!);
-              String? os = regModel.os;
-              regModel.c_d![0].cid;
+
               cid = regModel.cid;
               prefs.setString("cid", cid!);
 
               cname = regModel.c_d![0].cnme;
+
+              prefs.setString("cname", cname!);
+
+              print("cid----cname-----$cid---$cname");
               notifyListeners();
 
               await externalDir.fileWrite(fp1!);
@@ -130,7 +133,6 @@ class RegistrationController extends ChangeNotifier {
               isLoading = false;
               notifyListeners();
 
-              prefs.setString("os", os!);
               prefs.setString("user_type", appType!);
               String? user = prefs.getString("userType");
               await SheenDB.instance
@@ -165,12 +167,14 @@ class RegistrationController extends ChangeNotifier {
   }
 
   //////////////////////////////////////////////////////////
-  getLogin(String userName, String password, 
-      BuildContext context) async {
+  getLogin(String userName, String password, BuildContext context) async {
     try {
       Uri url = Uri.parse("$apiurl/login.php");
-      Map body = {'uname': userName, 'pass': password,};
-
+      Map body = {
+        'uname': userName,
+        'pass': password,
+      };
+      print("body------$body");
       isLoginLoading = true;
       notifyListeners();
       http.Response response = await http.post(
@@ -180,7 +184,7 @@ class RegistrationController extends ChangeNotifier {
       // print("login body ${body}");
 
       var map = jsonDecode(response.body);
-      // print("login map ${map}");
+      print("login map ${map}");
       isLoginLoading = false;
       notifyListeners();
 
@@ -196,8 +200,10 @@ class RegistrationController extends ChangeNotifier {
         prefs.setString("name", map[0]["name"]);
         prefs.setString("st_pwd", password);
         prefs.setString("user_id", map[0]["user_id"]);
-
-        
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
       }
 
       // print("stafff-------${loginModel.staffName}");
@@ -211,8 +217,11 @@ class RegistrationController extends ChangeNotifier {
   }
 
   getUserData() async {
+    isLoading = true;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    name = prefs.getString("name");
+    cname = prefs.getString("cname");
+    print("haiii ----$cname");
+    isLoading = false;
     notifyListeners();
   }
 }
