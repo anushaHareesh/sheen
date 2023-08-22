@@ -12,9 +12,10 @@ class ExternalDir {
     String dirPath = '${extDir!.path}/VgFp/';
     // ignore: avoid_print
     print("dirPath----$dirPath");
-    dirPath = dirPath.replaceAll("Android/data/com.example.sheenbakery/files/", "");
+    dirPath =
+        dirPath.replaceAll("Android/data/com.example.sheenbakery/files/", "");
     await Directory(dirPath).create(recursive: true);
-    final File file = File('$dirPath/fpCode.txt');     
+    final File file = File('$dirPath/fpCode.txt');
     // ignore: avoid_print
     print("file...$file");
     String filpath = '$dirPath/fpCode.txt';
@@ -39,7 +40,8 @@ class ExternalDir {
     Directory? extDir = await getExternalStorageDirectory();
 
     String dirPath = '${extDir!.path}/VgFp';
-    dirPath = dirPath.replaceAll("Android/data/com.example.sheenbakery/files/", "");
+    dirPath =
+        dirPath.replaceAll("Android/data/com.example.sheenbakery/files/", "");
     await Directory(dirPath).create(recursive: true);
 
     // Directory? baseDir = Directory('storage/emulated/0/Android/data');

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -7,7 +8,6 @@ import 'package:sheenbakery/screen/damage_screen.dart';
 import '../../controller/controller.dart';
 
 class DetailsSheet {
-  TextEditingController camt = TextEditingController();
   Future<void> showBottomSheet(BuildContext context, Size size, String br_name,
       String br_id, String date) async {
     return showModalBottomSheet(
@@ -24,7 +24,10 @@ class DetailsSheet {
                 ? Center(
                     child: Container(
                         height: size.height * 0.2,
-                        child: Center(child: CircularProgressIndicator())))
+                        child: Center(
+                            child: SpinKitCircle(
+                          color: Color.fromARGB(255, 54, 51, 51),
+                        ))))
                 : Center(
                     child: Padding(
                       padding: EdgeInsets.only(
@@ -68,6 +71,20 @@ class DetailsSheet {
                               ],
                             ),
                           ),
+                          SizedBox(
+                            height: size.height * 0.007,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "( ${date} )",
+                                style: TextStyle(
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
                           const Divider(),
                           value.sale_data.length == 0
                               ? Lottie.asset("assets/nodata.json",
@@ -76,10 +93,9 @@ class DetailsSheet {
                                   shrinkWrap: true,
                                   itemCount: value.sale_data.length,
                                   itemBuilder: (context, index) {
-                                    return ListTile(
-                                      visualDensity: VisualDensity(
-                                          horizontal: 0, vertical: -4),
-                                      title: Row(
+                                    return Padding(
+                                      padding: const EdgeInsets.only(left:12.0,right: 12,bottom: 8),
+                                      child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
@@ -93,7 +109,7 @@ class DetailsSheet {
                                                 textStyle: Theme.of(context)
                                                     .textTheme
                                                     .bodyText2,
-                                                fontSize: 15,
+                                                fontSize: 13,
                                                 // color: Colors.green,
                                                 fontWeight: FontWeight.bold,
                                                 // color: P_Settings.loginPagetheme,
@@ -105,8 +121,8 @@ class DetailsSheet {
                                             style: GoogleFonts.aBeeZee(
                                               textStyle: Theme.of(context)
                                                   .textTheme
-                                                  .bodyText2,
-                                              fontSize: 16,
+                                                  .bodyText2,     
+                                              fontSize: 14,
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold,
                                               // color: P_Settings.loginPagetheme,
@@ -115,6 +131,45 @@ class DetailsSheet {
                                         ],
                                       ),
                                     );
+                                    // return ListTile(
+                                    //   visualDensity: VisualDensity(
+                                    //       horizontal: 0, vertical: -4),
+                                    //   title: Row(
+                                    //     mainAxisAlignment:
+                                    //         MainAxisAlignment.spaceBetween,
+                                    //     children: [
+                                    //       Flexible(
+                                    //         child: Text(
+                                    //           value.sale_data[index]["pay_mode"]
+                                    //               .toString()
+                                    //               .toUpperCase(),
+                                    //           // "dknskjfnszkf sfnjd f zdfjknzsdkjf zsdfzsjnfzs fszj",
+                                    //           style: GoogleFonts.aBeeZee(
+                                    //             textStyle: Theme.of(context)
+                                    //                 .textTheme
+                                    //                 .bodyText2,
+                                    //             fontSize: 12,
+                                    //             // color: Colors.green,
+                                    //             fontWeight: FontWeight.bold,
+                                    //             // color: P_Settings.loginPagetheme,
+                                    //           ),
+                                    //         ),
+                                    //       ),
+                                    //       Text(
+                                    //         "\u{20B9}${value.sale_data[index]["p_amount"].toString()}",
+                                    //         style: GoogleFonts.aBeeZee(
+                                    //           textStyle: Theme.of(context)
+                                    //               .textTheme
+                                    //               .bodyText2,
+                                    //           fontSize: 13,
+                                    //           color: Colors.black,
+                                    //           fontWeight: FontWeight.bold,
+                                    //           // color: P_Settings.loginPagetheme,
+                                    //         ),
+                                    //       )
+                                    //     ],
+                                    //   ),
+                                    // );
                                   },
                                 ),
                           Divider(),
@@ -132,7 +187,7 @@ class DetailsSheet {
                                           textStyle: Theme.of(context)
                                               .textTheme
                                               .bodyText2,
-                                          fontSize: 15,
+                                          fontSize: 13,
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
                                           // color: P_Settings.loginPagetheme,
@@ -145,7 +200,7 @@ class DetailsSheet {
                                           textStyle: Theme.of(context)
                                               .textTheme
                                               .bodyText2,
-                                          fontSize: 18,
+                                          fontSize: 14,
                                           color: Colors.red,
                                           fontWeight: FontWeight.bold,
                                           // color: P_Settings.loginPagetheme,
@@ -157,7 +212,7 @@ class DetailsSheet {
                           SizedBox(
                             height: size.height * 0.01,
                           ),
-                          value.sale_data.length == 0
+                          value.last_s_dt == "null"
                               ? Container()
                               : Container(
                                   width: double.infinity,
@@ -192,8 +247,8 @@ class DetailsSheet {
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                          Divider(),
-                          value.sale_data.length == 0
+                          value.sale_data.length == 0 ? Container() : Divider(),
+                          value.total_csh == 0.00
                               ? Container()
                               : Padding(
                                   padding: const EdgeInsets.only(
@@ -215,7 +270,7 @@ class DetailsSheet {
                                       ),
                                       Spacer(),
                                       Text(
-                                        "\u{20B9}${value.total_csh}",
+                                        "\u{20B9}${value.total_csh.toStringAsFixed(2)}",
                                         style: GoogleFonts.aBeeZee(
                                           textStyle: Theme.of(context)
                                               .textTheme
@@ -229,92 +284,74 @@ class DetailsSheet {
                                     ],
                                   ),
                                 ),
-                          SizedBox(
-                            height: size.height * 0.014,
-                          ),
-                          value.sale_data.length == 0
+                          value.coll_data.length == 0
                               ? Container()
-                              : Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 14.0, right: 14),
-                                  child: Row(
-                                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        "Previously Collected",
-                                        style: GoogleFonts.aBeeZee(
-                                          textStyle: Theme.of(context)
-                                              .textTheme
-                                              .bodyText2,
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          // color: P_Settings.loginPagetheme,
-                                        ),
-                                      ),
-                                      Spacer(),
-                                      Text(
-                                        value.coll_data.isEmpty
-                                            ? "0.0"
-                                            : "\u{20B9}${value.coll_data[0]["prev_clt"]}",
-                                        style: GoogleFonts.aBeeZee(
-                                          textStyle: Theme.of(context)
-                                              .textTheme
-                                              .bodyText2,
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          // color: P_Settings.loginPagetheme,
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                              : SizedBox(
+                                  height: size.height * 0.014,
                                 ),
-                          SizedBox(
-                            height: size.height * 0.014,
-                          ),
-                          value.sale_data.length == 0
+                          value.coll_data.length == 0
                               ? Container()
-                              : Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 14.0, right: 14),
-                                  child: Row(
-                                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        "Previous Balance",
-                                        style: GoogleFonts.aBeeZee(
-                                          textStyle: Theme.of(context)
-                                              .textTheme
-                                              .bodyText2,
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          // color: P_Settings.loginPagetheme,
-                                        ),
+                              : Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 14.0, right: 14),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "Previously Collected",
+                                            style: GoogleFonts.aBeeZee(
+                                              textStyle: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText2,
+                                              fontSize: 14,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              // color: P_Settings.loginPagetheme,
+                                            ),
+                                          ),
+                                          InkWell(
+                                              onTap: () {
+                                                Provider.of<Controller>(context,
+                                                        listen: false)
+                                                    .saveCollection(
+                                                        context,
+                                                        br_id,
+                                                        date,
+                                                        value.camtController
+                                                            .text,
+                                                        value.difference
+                                                            .toString(),
+                                                        "1");
+                                              },
+                                              child: Icon(Icons.delete,
+                                                  color: Colors.red, size: 18)),
+                                          // Spacer(),
+                                          Text(
+                                            value.coll_data.isEmpty
+                                                ? "0.00"
+                                                : "\u{20B9}${value.coll_data[0]["prev_clt"]}",
+                                            style: GoogleFonts.aBeeZee(
+                                              textStyle: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText2,
+                                              fontSize: 15,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              // color: P_Settings.loginPagetheme,
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                      Spacer(),
-                                      Text(
-                                        value.coll_data.isEmpty
-                                            ? "0.0"
-                                            : "\u{20B9}${value.coll_data[0]["prev_blnc"]}",
-                                        style: GoogleFonts.aBeeZee(
-                                          textStyle: Theme.of(context)
-                                              .textTheme
-                                              .bodyText2,
-                                          fontSize: 15,
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold,
-                                          // color: P_Settings.loginPagetheme,
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                           SizedBox(
                             height: size.height * 0.01,
                           ),
-                          value.sale_data.length == 0
+                          value.total_csh == 0.00
                               ? Container()
                               : Padding(
                                   padding: const EdgeInsets.only(
@@ -337,23 +374,40 @@ class DetailsSheet {
                                       Spacer(),
                                       Container(
                                           height: size.height * 0.04,
-                                          width: size.width * 0.2,
+                                          width: size.width * 0.25,
                                           child: TextField(
-                                            controller: camt,
-                                            onSubmitted: (val) {
-                                              if (value.coll_data.isEmpty) {
-                                                double d = 0.0;
-                                                Provider.of<Controller>(context,
-                                                        listen: false)
-                                                    .calculateDifference(
-                                                        d, double.parse(val));
+                                            keyboardType: TextInputType.number,
+                                            controller: value.camtController,
+                                            onChanged: (val) {
+                                              if (val.isNotEmpty) {
+                                                if (value.coll_data.isEmpty) {
+                                                  Provider.of<Controller>(
+                                                          context,
+                                                          listen: false)
+                                                      .calculateDifference(
+                                                          value.total_csh,
+                                                          0.00,
+                                                          double.parse(val));
+                                                } else {
+                                                  Provider.of<Controller>(
+                                                          context,
+                                                          listen: false)
+                                                      .calculateDifference(
+                                                          value.total_csh,
+                                                          double.parse(
+                                                              value.coll_data[0]
+                                                                  ["prev_clt"]),
+                                                          double.parse(val));
+                                                }
                                               } else {
-                                                double d = double.parse(value
-                                                    .coll_data[0]["prev_blnc"]);
                                                 Provider.of<Controller>(context,
                                                         listen: false)
                                                     .calculateDifference(
-                                                        d, double.parse(val));
+                                                        value.total_csh,
+                                                        double.parse(
+                                                            value.coll_data[0]
+                                                                ["prev_clt"]),
+                                                        0);
                                               }
 
                                               // double diff =
@@ -369,7 +423,7 @@ class DetailsSheet {
                           SizedBox(
                             height: size.height * 0.01,
                           ),
-                          value.sale_data.length == 0
+                          value.total_csh == 0.00
                               ? Container()
                               : Padding(
                                   padding: const EdgeInsets.only(
@@ -391,7 +445,7 @@ class DetailsSheet {
                                       ),
                                       Spacer(),
                                       Text(
-                                        "\u{20B9}${value.difference}",
+                                        "\u{20B9}${value.difference.toStringAsFixed(2)}",
                                         style: GoogleFonts.aBeeZee(
                                           textStyle: Theme.of(context)
                                               .textTheme
@@ -410,91 +464,110 @@ class DetailsSheet {
                           SizedBox(
                             height: size.height * 0.01,
                           ),
-                          value.sale_data.length == 0
-                              ? Container()
-                              : value.dmg_count == 0
-                                  ? Container(
+                          value.dmg_count == 0
+                              ? value.sale_data.length == 0
+                                  ? Container()
+                                  : Container(
                                       width: size.width * 0.42,
                                       child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
-                                              primary: Colors.yellow),
+                                              primary: value.isSaveLoading
+                                                  ? Colors.green
+                                                  : Colors.yellow),
                                           onPressed: () {
-                                            Provider.of<Controller>(context,
-                                                    listen: false)
-                                                .saveCollection(
-                                                    context,
-                                                    br_id,
-                                                    date,
-                                                    camt.text,
-                                                    value.difference
-                                                        .toString());
+                                            if (value.camtController.text
+                                                .isNotEmpty) {
+                                              Provider.of<Controller>(context,
+                                                      listen: false)
+                                                  .saveCollection(
+                                                      context,
+                                                      br_id,
+                                                      date,
+                                                      value.camtController.text,
+                                                      value.difference
+                                                          .toString(),
+                                                      "0");
+                                            }
                                           },
                                           child: Text(
-                                            "UPDATE",
+                                            value.isSaveLoading
+                                                ? "Loading...."
+                                                : "UPDATE",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black),
                                           )),
                                     )
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width: size.width * 0.42,
-                                          child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  primary: Colors.yellow),
-                                              onPressed: () {
-                                                print("cz cnz cz-----");
-                                                Provider.of<Controller>(context,
-                                                        listen: false)
-                                                    .saveCollection(
-                                                        context,
-                                                        br_id,
-                                                        date,
-                                                        camt.text,
-                                                        value.difference
-                                                            .toString());
-                                              },
-                                              child: Text(
-                                                "UPDATE",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black),
-                                              )),
-                                        ),
-                                        SizedBox(
-                                          width: size.width * 0.03,
-                                        ),
-                                        Container(
-                                          width: size.width * 0.42,
-                                          child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  primary: Colors.black),
-                                              onPressed: () {
-                                                Provider.of<Controller>(context,
-                                                        listen: false)
-                                                    .getDamageData(
-                                                        context, br_id, date);
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          DamageScreen(
-                                                            brName: br_name,
-                                                          )),
-                                                );
-                                              },
-                                              child: Text(
-                                                "DAMAGE (${value.dmg_count})",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              )),
-                                        )
-                                      ],
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    value.sale_data.length == 0
+                                        ? Container()
+                                        : Container(
+                                            width: size.width * 0.42,
+                                            child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: value.isSaveLoading
+                                                        ? Colors.green
+                                                        : Colors.yellow),
+                                                onPressed: () {
+                                                  print("cz cnz cz-----");
+                                                  if (value.camtController.text
+                                                      .isNotEmpty) {
+                                                    Provider.of<Controller>(
+                                                            context,
+                                                            listen: false)
+                                                        .saveCollection(
+                                                            context,
+                                                            br_id,
+                                                            date,
+                                                            value.camtController
+                                                                .text,
+                                                            value.difference
+                                                                .toString(),
+                                                            "0");
+                                                  }
+                                                },
+                                                child: Text(
+                                                  value.isSaveLoading
+                                                      ? "Loading...."
+                                                      : "UPDATE",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black),
+                                                )),
+                                          ),
+                                    SizedBox(
+                                      width: size.width * 0.03,
+                                    ),
+                                    Container(
+                                      width: size.width * 0.42,
+                                      child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              primary: Colors.black),
+                                          onPressed: () {
+                                            Provider.of<Controller>(context,
+                                                    listen: false)
+                                                .getDamageData(
+                                                    context, br_id, date);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DamageScreen(
+                                                        brName: br_name,
+                                                      )),
+                                            );
+                                          },
+                                          child: Text(
+                                            "DAMAGE (${value.dmg_count})",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          )),
                                     )
+                                  ],
+                                )
                         ],
                       ),
                     ),

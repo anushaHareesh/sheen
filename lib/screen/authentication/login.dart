@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: size.height * 0.34,
                       width: size.width * 0.8,
                       child: Image.asset(
-                        "assets/login.jpeg",
+                        "assets/lo.png",
                         fit: BoxFit.contain,
                       )),
                   // Container(height: size.height*0.16,),
@@ -84,6 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                         scrollPadding: EdgeInsets.only(
                             bottom: topInsets + size.height * 0.18),
                         decoration: InputDecoration(
+                          // border: InputBorder.none,
                             contentPadding: EdgeInsets.only(
                                 left: 10.0, top: 15.0, bottom: 15.0),
 
@@ -131,6 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                                   bottom: topInsets + size.height * 0.18),
                               obscureText: _isObscure.value,
                               decoration: InputDecoration(
+                                // border: InputBorder.none,
                                   contentPadding: EdgeInsets.only(
                                       left: 10.0, top: 15.0, bottom: 15.0),
 

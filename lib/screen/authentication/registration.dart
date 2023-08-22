@@ -99,7 +99,7 @@ class _RegistrationState extends State<Registration> {
                     height: size.height * 0.34,
                     width: size.width * 0.8,
                     child: Image.asset(
-                      "assets/registration.png",
+                      "assets/lo.png",
                       fit: BoxFit.contain,
                     )),
                 // Container(height: size.height*0.16,),
@@ -135,6 +135,7 @@ class _RegistrationState extends State<Registration> {
                       scrollPadding: EdgeInsets.only(
                           bottom: topInsets + size.height * 0.18),
                       decoration: InputDecoration(
+                          // border: InputBorder.none,
                           contentPadding: EdgeInsets.only(
                               left: 10.0, top: 15.0, bottom: 15.0),
                           // fillColor: Color.fromARGB(255, 235, 232, 232),
@@ -180,6 +181,7 @@ class _RegistrationState extends State<Registration> {
                           bottom: topInsets + size.height * 0.18),
                       // obscureText: _isObscure.value,
                       decoration: const InputDecoration(
+                          // border: InputBorder.none,
                           contentPadding: EdgeInsets.only(
                               left: 10.0, top: 15.0, bottom: 15.0),
 

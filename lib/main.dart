@@ -1,8 +1,10 @@
 import 'dart:io';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:month_year_picker/month_year_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
+// import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -11,18 +13,21 @@ import 'package:sheenbakery/screen/authentication/login.dart';
 import 'package:sheenbakery/screen/authentication/login.dart';
 import 'package:sheenbakery/screen/authentication/registration.dart';
 import 'package:sheenbakery/screen/home_page.dart';
+import 'package:sheenbakery/screen/splashscreen.dart';
 import 'package:sheenbakery/screen/stream_home.dart';
 
 import 'controller/controller.dart';
 import 'controller/registration_controller.dart';
 
+//key----SHEN56HYJYRX
+//user--vega ----pwd---vega
 bool isLoggedIn = false;
 bool isRegistered = false;
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  isLoggedIn = await checkLogin();
-  isRegistered = await checkRegistration();
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // isLoggedIn = await checkLogin();
+  // isRegistered = await checkRegistration();
   requestPermission();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -35,7 +40,7 @@ Future<void> main() async {
     ],
     child: const MyApp(),
   ));
-  FlutterNativeSplash.remove();
+  // FlutterNativeSplash.remove();
 }
 
 checkLogin() async {
@@ -101,6 +106,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        localizationsDelegates: [
+          GlobalWidgetsLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          MonthYearPickerLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale('en', 'US'), // English US
+          const Locale('en', 'GB'), // English UK
+          // ... other locales the app supports
+        ],
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
             primaryColor: Colors.yellow,
@@ -122,12 +137,11 @@ class MyApp extends StatelessWidget {
             //   ),
             // ),
             ),
-        home: isRegistered
-            ? isLoggedIn
-                ? const HomePage()
-                : const LoginPage()
-            : const Registration()
-        // home: LoginPage()
-        );
+        // home: isRegistered
+        //     ? isLoggedIn
+        //         ? const HomePage()
+        //         : const LoginPage()
+        //     : const Registration()
+        home: SplashScreen());
   }
 }
