@@ -7,6 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sheenbakery/controller/registration_controller.dart';
 import 'package:sheenbakery/screen/authentication/login.dart';
+import 'package:sheenbakery/screen/reports/damage_report.dart';
+
+import 'package:sheenbakery/screen/reports/itemwise_report.dart';
+import 'package:sheenbakery/screen/reports/peakwise_time_report.dart';
 import 'package:sheenbakery/screen/reports/sale_report.dart';
 import 'package:sheenbakery/screen/widgets/detail_sheet.dart';
 import 'package:http/http.dart' as http;
@@ -24,6 +28,8 @@ class _HomePageState extends State<HomePage> {
   DateTime selectedDate = DateTime.now();
   String? formattedDate;
   String? selectval;
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
+
   List<String> reports = ["Sale Report 123", "vbvbvnb"];
   void _onRefresh() async {
     formattedDate = DateFormat('dd-MM-yyyy').format(selectedDate);
@@ -93,9 +99,18 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
+      key: _key,
+      // backgroundColor: Colors.white,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: new Icon(
+              Icons.menu,
+              color: Colors.white,
+            ),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
         actions: [
           PopupMenuButton(
               icon: const Icon(Icons.more_vert,
@@ -141,14 +156,13 @@ class _HomePageState extends State<HomePage> {
                       (_) => false,
                     );
                     break;
-
                   case 'refresh':
                     _onRefresh();
                 }
               })
         ],
         toolbarHeight: 90, // default is 56
-        toolbarOpacity: 0.5,
+        // toolbarOpacity: 0.5,
         title: Consumer<RegistrationController>(
           builder: (context, value, child) => value.isLoading
               ? SpinKitChasingDots(
@@ -183,6 +197,210 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 54, 51, 51),
         elevation: 0,
+      ),
+      // drawer: Drawer(),
+      drawer: Drawer(
+        child: ListView(
+          // padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 54, 51, 51),
+              ),
+              child: Consumer<RegistrationController>(
+                builder: (context, value, child) => Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        InkWell(
+                            onTap: () {
+                              _key.currentState!.closeDrawer();
+                            },
+                            child: Icon(
+                              Icons.close,
+                              color: Colors.white,
+                            ))
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          child: Image.asset(
+                            "assets/man.png",
+                            height: size.height * 0.07,
+                          ),
+                        ),
+                        SizedBox(
+                          width: size.width * 0.016,
+                        ),
+                        Flexible(
+                          child: Text(
+                            value.userName.toString().toUpperCase(),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: size.height * 0.01),
+            InkWell(
+                onTap: () {
+                  Provider.of<Controller>(context, listen: false).getCategory(
+                    context,
+                  );
+                  Provider.of<Controller>(context, listen: false)
+                      .getItemwisereport(
+                    context,
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ItemwiseReport()),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 9.0, right: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          // CircleAvatar(
+                          //   radius: 10,
+                          //   backgroundColor: Colors.transparent,
+                          //   backgroundImage: AssetImage(
+                          //     "assets/item.png",
+                          //   ),
+                          // ),
+                          Icon(
+                            Icons.report,
+                            size: 16,
+                            color: Colors.green,
+                          ),
+
+                          SizedBox(
+                            width: size.width * 0.01,
+                          ),
+                          Text(
+                            'Itemwise Report'.toUpperCase(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey[700]),
+                          ),
+                        ],
+                      ),
+                      Icon(Icons.arrow_right, size: 37)
+                    ],
+                  ),
+                )),
+            Divider(
+              height: 10,
+            ),
+
+            /////////////////////////////////////////////////////////////////////////////////
+            InkWell(
+              onTap: () {
+                Provider.of<Controller>(context, listen: false).getCategory(
+                  context,
+                );
+                Provider.of<Controller>(context, listen: false)
+                    .getPeaktimeBranchwiseReport(
+                  context,
+                );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PeakwiseTimeReport()),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(left: 9.0, right: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.timeline_outlined,
+                          size: 16,
+                          color: Colors.blue,
+                        ),
+                        // Image.asset(
+                        //   "assets/time.png",
+                        //   height: size.height * 0.02,
+                        // ),
+                        SizedBox(
+                          width: size.width * 0.01,
+                        ),
+                        Text(
+                          'Peakwise Time Report'.toUpperCase(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey[700]),
+                        ),
+                      ],
+                    ),
+                    Icon(Icons.arrow_right, size: 37)
+                  ],
+                ),
+              ),
+            ),
+            ////////////////////////////////////////////////////////////////////////////////////
+            Divider(
+              height: 10,
+            ),
+            InkWell(
+              onTap: () {
+                Provider.of<Controller>(context, listen: false).getCategory(
+                  context,
+                );
+                Provider.of<Controller>(context, listen: false)
+                    .getDamageCountReport(
+                  context,
+                );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DamageCountReport()),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(left: 9.0, right: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.report_off_sharp,
+                          size: 16,
+                          color: Colors.red,
+                        ),
+                        // Image.asset(
+                        //   "assets/damage.png",
+                        //   height: size.height * 0.02,
+                        // ),
+                        SizedBox(
+                          width: size.width * 0.01,
+                        ),
+                        Text(
+                          'Damage Count Report'.toUpperCase(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey[700]),
+                        ),
+                      ],
+                    ),
+                    Icon(Icons.arrow_right, size: 37)
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
       body: Consumer<Controller>(
         builder: (context, value, child) => value.isDashLoading
@@ -403,34 +621,25 @@ class _HomePageState extends State<HomePage> {
                       ),
                       // InkWell(
                       //   onTap: () {
-                      //     Provider.of<Controller>(context, listen: false)
-                      //         .getDashboardDetails(
-                      //             context,
-                      //             map["branch_id"].toString(),
-                      //             formattedDate.toString());
-                      //     Provider.of<Controller>(context, listen: false)
-                      //         .camtController
-                      //         .clear();
-                      //     // Provider.of<Controller>(context, listen: false).difference =
-                      //     //     0.00;
-
-                      //     DetailsSheet sheet = DetailsSheet();
-                      //     sheet.showBottomSheet(
-                      //         context,
-                      //         size,
-                      //         map["branch_name"],
-                      //         map["branch_id"],
-                      //         formattedDate.toString());
+                      //     // Provider.of<Controller>(context, listen: false)
+                      //     //     .getSaleReport(
+                      //     //         context, map["branch_id"].toString(), "");
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) =>
+                      //               ConfirmationDetailsPage()),
+                      //     );
                       //   },
                       //   child: Container(
                       //     decoration: BoxDecoration(
-                      //       color: Colors.grey,
+                      //       color: Colors.blueAccent,
                       //       borderRadius: BorderRadius.circular(10),
                       //     ),
                       //     child: Padding(
                       //       padding: const EdgeInsets.all(6.0),
                       //       child: Text(
-                      //         "Collection",
+                      //         "Itemwise",
                       //         style: TextStyle(
                       //             color: Colors.white,
                       //             fontWeight: FontWeight.bold,
@@ -438,7 +647,67 @@ class _HomePageState extends State<HomePage> {
                       //       ),
                       //     ),
                       //   ),
-                      // )
+                      // ),
+                      // InkWell(
+                      //   onTap: () {
+                      //     // Provider.of<Controller>(context, listen: false)
+                      //     //     .getSaleReport(
+                      //     //         context, map["branch_id"].toString(), "");
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) => SaleReport(
+                      //               brId: map["branch_id"].toString(),
+                      //               brName: map["branch_name"].toString())),
+                      //     );
+                      //   },
+                      //   child: Container(
+                      //     decoration: BoxDecoration(
+                      //       color: Colors.blueAccent,
+                      //       borderRadius: BorderRadius.circular(10),
+                      //     ),
+                      //     child: Padding(
+                      //       padding: const EdgeInsets.all(6.0),
+                      //       child: Text(
+                      //         "Peakwise time",
+                      //         style: TextStyle(
+                      //             color: Colors.white,
+                      //             fontWeight: FontWeight.bold,
+                      //             fontSize: 10),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      // InkWell(
+                      //   onTap: () {
+                      //     // Provider.of<Controller>(context, listen: false)
+                      //     //     .getSaleReport(
+                      //     //         context, map["branch_id"].toString(), "");
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) => SaleReport(
+                      //               brId: map["branch_id"].toString(),
+                      //               brName: map["branch_name"].toString())),
+                      //     );
+                      //   },
+                      //   child: Container(
+                      //     decoration: BoxDecoration(
+                      //       color: Colors.blueAccent,
+                      //       borderRadius: BorderRadius.circular(10),
+                      //     ),
+                      //     child: Padding(
+                      //       padding: const EdgeInsets.all(6.0),
+                      //       child: Text(
+                      //         "Damage",
+                      //         style: TextStyle(
+                      //             color: Colors.white,
+                      //             fontWeight: FontWeight.bold,
+                      //             fontSize: 10),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   )
                 ],

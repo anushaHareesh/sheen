@@ -10,15 +10,24 @@ import 'package:sheenbakery/components/common_data.dart';
 import '../components/network_connectivity.dart';
 
 class Controller extends ChangeNotifier {
+  String? fromDate;
+  String? todate;
   TextEditingController camtController = TextEditingController();
-
+  String? catSelected;
   List<Map<String, dynamic>> branch_list = [];
   List<Map<String, dynamic>> sale_report_list = [];
-
+  List<Map<String, dynamic>> category_list = [];
+  List fisttableHeader = [];
+  List secndtablHeader = [];
   List<Map<String, dynamic>> sale_data = [];
   List<Map<String, dynamic>> coll_data = [];
   double total_csh = 0.00;
   List<Map<String, dynamic>> damage_list = [];
+  ////////////////////////////////////////////////////////////////
+  List<Map<String, dynamic>> itemwise_report_list = [];
+  List<Map<String, dynamic>> peakwise_time_report_list = [];
+  List<Map<String, dynamic>> damage_report_list = [];
+
   double sum = 0.0;
   int dmg_count = 0;
   bool isDashLoading = false;
@@ -296,6 +305,7 @@ class Controller extends ChangeNotifier {
     print("jbjhxfbjhfgb----$difference---");
     notifyListeners();
   }
+
 ///////////////////////////////////////////////////////////////
   getSaleReport(BuildContext context, String br_id, String f_date) {
     NetConnection.networkConnection(context).then((value) async {
@@ -327,5 +337,397 @@ class Controller extends ChangeNotifier {
         }
       }
     });
+  }
+
+  //////////////////////////////////////////////////////
+  getCategory(BuildContext context) {
+    NetConnection.networkConnection(context).then((value) async {
+      if (value == true) {
+        try {
+          // category_list = [
+          //   {
+          //     "cat_id": "1",
+          //     "cat_name": "biscuit",
+          //   },
+          //   {
+          //     "cat_id": "2",
+          //     "cat_name": "cake",
+          //   },
+          //   {
+          //     "cat_id": "3",
+          //     "cat_name": "chips",
+          //   },
+          //   {
+          //     "cat_id": "4",
+          //     "cat_name": "snacks",
+          //   },
+          //   // {
+          //   //   "cat_uid": "1",
+          //   //   "cat_name": "biscuit",
+          //   // },
+          // ];
+
+          Uri url = Uri.parse("$apiurl/get_category.php");
+
+          Map body = {
+            // 'branch_id': br_id,
+            // 'f_date': f_date,
+          };
+          print("category body-------$body");
+          isLoading = true;
+          notifyListeners();
+          http.Response response = await http.post(
+            url,
+          );
+          var map = jsonDecode(response.body);
+          print("category-$map");
+          category_list.clear();
+          for (var item in map) {
+            category_list.add(item);
+          }
+          isLoading = false;
+          notifyListeners();
+        } catch (e) {
+          print(e);
+          // return null;
+          return [];
+        }
+      }
+    });
+  }
+
+/////////////////////////////////////////////////////////////////////////////////
+  setDropdowndata(String s) {
+    for (int i = 0; i < category_list.length; i++) {
+      if (category_list[i]["cat_id"] == s) {
+        catSelected = category_list[i]["cat_name"];
+      }
+    }
+    print("s------$s");
+    notifyListeners();
+  }
+
+  /////////////////////////////////////////////////////////////////////////////
+  getItemwisereport(BuildContext context) {
+    NetConnection.networkConnection(context).then((value) async {
+      if (value == true) {
+        try {
+          itemwise_report_list = [
+            {
+              "Item": "item2bfff ffffff",
+              'br1': "1000",
+              "Br2": "200",
+              "Br3": "100000",
+              "Br4": "345",
+              "Br5": "567",
+              "Br6": "1233",
+              'Br7': "345",
+              "Br8": "456",
+            },
+            {
+              "Item": "item1",
+              'br1': "2300",
+              "Br2": "3211",
+              "Br3": "100000",
+              "Br4": "22",
+              "Br5": "222",
+              "Br6": "233",
+              'Br7': "123",
+              "Br8": "2222",
+            },
+            {
+              "Item": "item3",
+              'br1': "4500",
+              "Br2": "3400",
+              "Br3": "100000",
+              "Br4": "999",
+              "Br5": "999",
+              "Br6": "9999",
+              'Br7': "anu",
+              "Br8": "manager",
+            },
+            {
+              "Item": "item5",
+              'Br1': "234",
+              "Br2": "4322",
+              "Br3": "100000",
+              "Br4": "88",
+              "Br5": "88",
+              "Br6": "888",
+              'Br7': "88",
+              "Br8": "manager",
+            },
+            {
+              "Item": "item8",
+              'Br1': "2222",
+              "Br2": "3333",
+              "Br3": "100000",
+              "Br4": "888",
+              "Br5": "888",
+              "Br6": "7777",
+              'Br7': "777",
+              "Br8": "6666",
+            },
+            {
+              "Item": "item5",
+              'Br1': "1234",
+              "Br2": "2345",
+              "Br3": "100000",
+              "Br4": "1233",
+              "Br5": "33333",
+              "Br6": "444",
+              'Br7': "5555",
+              "Br8": "66",
+            },
+          ];
+          fisttableHeader = ["Item"];
+
+          secndtablHeader = [
+            "Br1",
+            "Br2",
+            "Br3",
+            "Br4",
+            "Br5",
+            "Br6",
+            "Br7",
+            "Br8"
+          ];
+          // Uri url = Uri.parse("$apiurl/load_staff_sale.php");
+
+          // Map body = {
+          //   // 'branch_id': br_id,
+          //   // 'f_date': f_date,
+          // };
+          // print("category body-------$body");
+          // isLoading = true;
+          // notifyListeners();
+          // http.Response response = await http.post(url, body: body);
+          // var map = jsonDecode(response.body);
+          // print("sale report---$map");
+          // category_list.clear();
+          // for (var item in map) {
+          //   category_list.add(item);
+          // }
+          isLoading = false;
+          notifyListeners();
+        } catch (e) {
+          print(e);
+          // return null;
+          return [];
+        }
+      }
+    });
+  }
+
+/////////////////////////////////////////////////////////////////////////
+  getDamageCountReport(BuildContext context) {
+    NetConnection.networkConnection(context).then((value) async {
+      if (value == true) {
+        try {
+          damage_report_list = [
+            {
+              "Item": "item2bfff ffffff",
+              'br1': "1000",
+              "Br2": "200",
+              "Br3": "100000",
+              "Br4": "345",
+              "Br5": "567",
+              "Br6": "1233",
+              'Br7': "345",
+              "Br8": "456",
+            },
+            {
+              "Item": "item1",
+              'br1': "2300",
+              "Br2": "3211",
+              "Br3": "100000",
+              "Br4": "22",
+              "Br5": "222",
+              "Br6": "233",
+              'Br7': "123",
+              "Br8": "2222",
+            },
+            {
+              "Item": "item3",
+              'br1': "4500",
+              "Br2": "3400",
+              "Br3": "100000",
+              "Br4": "999",
+              "Br5": "999",
+              "Br6": "9999",
+              'Br7': "anu",
+              "Br8": "manager",
+            },
+            {
+              "Item": "item5",
+              'Br1': "234",
+              "Br2": "4322",
+              "Br3": "100000",
+              "Br4": "88",
+              "Br5": "88",
+              "Br6": "888",
+              'Br7': "88",
+              "Br8": "manager",
+            },
+            {
+              "Item": "item8",
+              'Br1': "2222",
+              "Br2": "3333",
+              "Br3": "100000",
+              "Br4": "888",
+              "Br5": "888",
+              "Br6": "7777",
+              'Br7': "777",
+              "Br8": "6666",
+            },
+            {
+              "Item": "item5",
+              'Br1': "1234",
+              "Br2": "2345",
+              "Br3": "100000",
+              "Br4": "1233",
+              "Br5": "33333",
+              "Br6": "444",
+              'Br7': "5555",
+              "Br8": "66",
+            },
+          ];
+          fisttableHeader = ["Item"];
+
+          secndtablHeader = [
+            "Br1",
+            "Br2",
+            "Br3",
+            "Br4",
+            "Br5",
+            "Br6",
+            "Br7",
+            "Br8"
+          ];
+          // Uri url = Uri.parse("$apiurl/load_staff_sale.php");
+
+          // Map body = {
+          //   // 'branch_id': br_id,
+          //   // 'f_date': f_date,
+          // };
+          // print("category body-------$body");
+          // isLoading = true;
+          // notifyListeners();
+          // http.Response response = await http.post(url, body: body);
+          // var map = jsonDecode(response.body);
+          // print("sale report---$map");
+          // category_list.clear();
+          // for (var item in map) {
+          //   category_list.add(item);
+          // }
+          isLoading = false;
+          notifyListeners();
+        } catch (e) {
+          print(e);
+          // return null;
+          return [];
+        }
+      }
+    });
+  }
+
+  getPeaktimeBranchwiseReport(BuildContext context) {
+    NetConnection.networkConnection(context).then((value) async {
+      if (value == true) {
+        try {
+          peakwise_time_report_list = [
+            {
+              "Branch": "Br1",
+              '9am-12pm': "1000",
+              "12pm-2pm": "200",
+              "2pm-4pm": "100000",
+              "4pm-6pm": "345",
+              "6pm-8pm": "222",
+            },
+            {
+              "Branch": "Br2",
+              '9am-12pm': "2300",
+              "12pm-2pm": "3211",
+              "2pm-4pm": "100000",
+              "4pm-6pm": "22",
+              "6pm-8pm": "222",
+            },
+            {
+              "Branch": "Br3",
+              '9am-12pm': "4500",
+              "12pm-2pm": "3400",
+              "2pm-4pm": "100000",
+              "4pm-6pm": "999",
+              "6pm-8pm": "999",
+            },
+            {
+              "Branch": "Br4",
+              '9am-12pm': "234",
+              "12pm-2pm": "4322",
+              "2pm-4pm": "100000",
+              "4pm-6pm": "88",
+              "6pm-8pm": "88",
+            },
+            {
+              "Branch": "Br5",
+              '9am-12pm': "2222",
+              "12pm-2pm": "3333",
+              "2pm-4pm": "100000",
+              "4pm-6pm": "888",
+              "6pm-8pm": "888",
+            },
+            {
+              "Branch": "Br6",
+              '9am-12pm': "1234",
+              "12pm-2pm": "2345",
+              "2pm-4pm": "100000",
+              "4pm-6pm": "1233",
+              "6pm-8pm": "33333",
+            },
+          ];
+          fisttableHeader = ["Branch"];
+
+          secndtablHeader = [
+            "9am-12pm",
+            "12pm-2pm",
+            "2pm-4pm",
+            "4pm-6pm",
+            "6pm-8pm",
+          ];
+
+          print("peaks time----$peakwise_time_report_list");
+          // Uri url = Uri.parse("$apiurl/load_staff_sale.php");
+
+          // Map body = {
+          //   // 'branch_id': br_id,
+          //   // 'f_date': f_date,
+          // };
+          // print("category body-------$body");
+          // isLoading = true;
+          // notifyListeners();
+          // http.Response response = await http.post(url, body: body);
+          // var map = jsonDecode(response.body);
+          // print("sale report---$map");
+          // category_list.clear();
+          // for (var item in map) {
+          //   category_list.add(item);
+          // }
+          isLoading = false;
+          notifyListeners();
+        } catch (e) {
+          print(e);
+          // return null;
+          return [];
+        }
+      }
+    });
+  }
+
+///////////////////////////////////////////////////////////////////////////////
+  setDate(String date1, String date2) {
+    fromDate = date1;
+    todate = date2;
+    print("gtyy----$fromDate----$todate");
+    notifyListeners();
   }
 }

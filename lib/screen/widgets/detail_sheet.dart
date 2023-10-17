@@ -94,7 +94,8 @@ class DetailsSheet {
                                   itemCount: value.sale_data.length,
                                   itemBuilder: (context, index) {
                                     return Padding(
-                                      padding: const EdgeInsets.only(left:12.0,right: 12,bottom: 8),
+                                      padding: const EdgeInsets.only(
+                                          left: 12.0, right: 12, bottom: 8),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -121,7 +122,7 @@ class DetailsSheet {
                                             style: GoogleFonts.aBeeZee(
                                               textStyle: Theme.of(context)
                                                   .textTheme
-                                                  .bodyText2,     
+                                                  .bodyText2,
                                               fontSize: 14,
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold,

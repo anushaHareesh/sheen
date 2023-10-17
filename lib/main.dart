@@ -14,7 +14,7 @@ import 'package:sheenbakery/screen/authentication/login.dart';
 import 'package:sheenbakery/screen/authentication/registration.dart';
 import 'package:sheenbakery/screen/home_page.dart';
 import 'package:sheenbakery/screen/splashscreen.dart';
-import 'package:sheenbakery/screen/stream_home.dart';
+import 'package:sheenbakery/screen/sql_server_test.dart';
 
 import 'controller/controller.dart';
 import 'controller/registration_controller.dart';
@@ -118,30 +118,16 @@ class MyApp extends StatelessWidget {
         ],
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-            primaryColor: Colors.yellow,
+            primaryColor: Color.fromARGB(255, 54, 51, 51),
             secondaryHeaderColor: Colors.black,
-            // primaryColor: Colors.red[400],
-            // accentColor: Color.fromARGB(255, 248, 137, 137),
             scaffoldBackgroundColor: Colors.white,
-            // fontFamily: 'Roboto Mono sample',
             visualDensity: VisualDensity.adaptivePlatformDensity,
-            textTheme: GoogleFonts.aBeeZeeTextTheme()
-            // scaffoldBackgroundColor: P_Settings.bodycolor,
-            // textTheme: const TextTheme(
-            //   headline1: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            //   headline6: TextStyle(
-            //     fontSize: 25.0,
-            //   ),
-            //   bodyText2: TextStyle(
-            //     fontSize: 14.0,
-            //   ),
-            // ),
-            ),
+            textTheme: GoogleFonts.aBeeZeeTextTheme()),
         // home: isRegistered
         //     ? isLoggedIn
         //         ? const HomePage()
         //         : const LoginPage()
-        //     : const Registration()
+        //     : const Registration());
         home: SplashScreen());
   }
 }

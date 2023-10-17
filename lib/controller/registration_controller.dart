@@ -49,6 +49,8 @@ class RegistrationController extends ChangeNotifier {
   String? fp;
   String? cid;
   String? cname;
+
+
   String? sof;
   int? qtyinc;
   String? uid;
@@ -167,11 +169,11 @@ class RegistrationController extends ChangeNotifier {
   }
 
   //////////////////////////////////////////////////////////
-  getLogin(String userName, String password, BuildContext context) async {
+  getLogin(String user_name, String password, BuildContext context) async {
     try {
       Uri url = Uri.parse("$apiurl/login.php");
       Map body = {
-        'uname': userName,
+        'uname': user_name,
         'pass': password,
       };
       print("body------$body");
@@ -196,7 +198,7 @@ class RegistrationController extends ChangeNotifier {
         isLoginLoading = false;
         notifyListeners();
       } else {
-        prefs.setString("st_uname", userName);
+        prefs.setString("st_uname", user_name);
         prefs.setString("name", map[0]["name"]);
         prefs.setString("st_pwd", password);
         prefs.setString("user_id", map[0]["user_id"]);
@@ -220,6 +222,7 @@ class RegistrationController extends ChangeNotifier {
     isLoading = true;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     cname = prefs.getString("cname");
+    userName = prefs.getString("name");
     print("haiii ----$cname");
     isLoading = false;
     notifyListeners();
