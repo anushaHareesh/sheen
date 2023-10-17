@@ -127,17 +127,18 @@ class _ItemwiseReportState extends State<ItemwiseReport> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      
       appBar: AppBar(
         leading: InkWell(
             onTap: () {
               Navigator.pop(context);
             },
-            child: Icon(Icons.arrow_back)),
+            child: Icon(Icons.arrow_back,color: Colors.white,)),
         backgroundColor: Color.fromARGB(255, 54, 51, 51),
         elevation: 0,
         title: const Text(
           "Itemwise Report",
-          style: TextStyle(fontSize: 15),
+          style: TextStyle(fontSize: 15,color: Colors.white),
         ),
       ),
       body: Padding(

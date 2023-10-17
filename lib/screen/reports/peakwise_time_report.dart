@@ -32,10 +32,15 @@ class _PeakwiseTimeReportState extends State<PeakwiseTimeReport> {
 
     return Scaffold(
       appBar: AppBar(
+         leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back,color: Colors.white,)),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           "Peakwise Time Report",
-          style: TextStyle(fontSize: 14),
+          style: TextStyle(fontSize: 14,color: Colors.white),
         ),
       ),
       body: Padding(

@@ -76,9 +76,12 @@ class _SaleReportState extends State<SaleReport> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(onPressed: (){
+            Navigator.pop(context);
+          }, icon: Icon(Icons.arrow_back,color: Colors.white,)),
           title: Text(
             "SMan report  ( ${widget.brName} )",
-            style: TextStyle(fontSize: 13),
+            style: TextStyle(fontSize: 13,color: Colors.white),
           ),
           backgroundColor: Color.fromARGB(255, 54, 51, 51),
         ),
